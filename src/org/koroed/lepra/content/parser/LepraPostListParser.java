@@ -66,14 +66,18 @@ public class LepraPostListParser extends LepraContentParser<Integer> {
 
     private LepraPost postParser(String rawPost) {
         Document doc = Jsoup.parse(rawPost);
+
+        String postId = doc.select(".post").first().attr("id");
         String postContent =  doc.select(".dti").first().html();
         String userLogin =  doc.select(".c_user").first().text();
+        String postLink = null;
         String commentsCnt = null, newCommentsCnt = null;
         Element commentsCounts = doc.select(".b-post_comments_links").first();
         if(commentsCounts != null) {
            Elements cnts =  commentsCounts.getElementsByTag("a");
            if(!cnts.isEmpty()) {
                commentsCnt = cnts.first().text();
+               postLink = cnts.first().attr("href");
                if(cnts.size() > 1) {
                    newCommentsCnt = cnts.get(1).text();
                }
@@ -88,6 +92,7 @@ public class LepraPostListParser extends LepraContentParser<Integer> {
         if(StringUtils.isNotBlank(title)) {
             title = title.trim().substring(8, title.indexOf("<a")).replaceAll("\\s", " ").trim();
         }
-        return new LepraPost(userLogin, title, new Date(date * 1000), commentsCnt, newCommentsCnt, postContent);
+        int postIdInt = Integer.valueOf(postId.substring(1, postId.length()));
+        return new LepraPost(postIdInt, postLink, userLogin, title, new Date(date * 1000), commentsCnt, newCommentsCnt, postContent);
     }
 }
