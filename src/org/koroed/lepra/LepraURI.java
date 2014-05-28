@@ -20,6 +20,11 @@ public class LepraURI {
         return newURI(PROTOCOL + LEPRA_HOSTNAME + "/users/" + login);
     }
 
+    public static URI getPostListURI(String leprosorium) {
+        String hostname = leprosorium != null ? leprosorium + "." + LEPRA_HOSTNAME : LEPRA_HOSTNAME;
+        return newURI(PROTOCOL + hostname + "/ajax/index/moar/");
+    }
+
     private static URI newURI(String uri) {
         try {
             return new URI(uri);

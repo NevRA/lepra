@@ -5,10 +5,11 @@ import org.koroed.lepra.content.LepraPost;
 import org.koroed.lepra.content.LepraProfile;
 import org.koroed.lepra.content.LepraUser;
 import org.koroed.lepra.content.parser.*;
+import org.koroed.lepra.loader.LepraAsyncContentListLoader;
+import org.koroed.lepra.loader.LepraNewContentHandler;
 
 import java.net.URI;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -70,23 +71,12 @@ public class Lepra {
         return httpClient.loadContent(LepraURI.getProfileURI(login), LepraProfileParser.getInstance());
     }
 
-    private List<LepraPost> loadPostList(URI uri, int offset) {
-        Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("csrf_token", ctx.getCsrfToken());
-        parameters.put("offset", Integer.toString(offset));
-        parameters.put("sorting", "last_activity");
-
-        return httpClient.loadContent(uri, parameters, LepraPostListParser.getInstance());
+    private LepraAsyncContentListLoader getPostListLoader(URI uri, String sorting, LepraNewContentHandler<LepraPost> handler) {
+        return new LepraAsyncContentListLoader(uri, new LepraPostListParser(handler), sorting, ctx, httpClient);
     }
 
-    public static void main(String[] args) throws Exception {
-        Lepra l = Lepra.getInstance();
-        System.out.println(l.login("Hutch", "pass", true));
-
-        List<LepraPost> pl = l.loadPostList(new URI("https://leprosorium.ru/ajax/inbox/moar/"), 42);
-        for(LepraPost p: pl) {
-            System.out.println(p);
-        }
-        l.logout();
+    public LepraAsyncContentListLoader getPostListLoader(String leprosorium, LepraNewContentHandler<LepraPost> handler) {
+        return getPostListLoader(LepraURI.getPostListURI(leprosorium), "last_activity", handler);
     }
+
 }

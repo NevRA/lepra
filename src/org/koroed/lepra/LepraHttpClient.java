@@ -44,11 +44,11 @@ public class LepraHttpClient {
         context.setCookieStore(cookieStore);
     }
 
-    protected <T> T loadContent(URI uri, LepraContentParser<T> parser) {
+    public <T> T loadContent(URI uri, LepraContentParser<T> parser) {
         return loadContent(uri, null, parser);
     }
 
-    protected <T> T loadContent(URI uri, Map<String, String> formAttributes, LepraContentParser<T> parser) {
+    public <T> T loadContent(URI uri, Map<String, String> formAttributes, LepraContentParser<T> parser) {
         CloseableHttpResponse response = null;
         try {
             if (formAttributes != null && formAttributes.size() > 0) {
@@ -73,7 +73,7 @@ public class LepraHttpClient {
         return null;
     }
 
-    private HttpUriRequest createFormRequest(URI uri, Map<String, String> formAttributes) throws URISyntaxException {
+    private static HttpUriRequest createFormRequest(URI uri, Map<String, String> formAttributes) throws URISyntaxException {
         NameValuePair[] parameters = new NameValuePair[formAttributes.size()];
         String[] keys = new String[formAttributes.size()];
         formAttributes.keySet().toArray(keys);
@@ -82,11 +82,10 @@ public class LepraHttpClient {
         for (int i = 0; i < formAttributes.size(); i++) {
             parameters[i] = new BasicNameValuePair(keys[i], values[i]);
         }
-        HttpUriRequest req = RequestBuilder.post()
+        return RequestBuilder.post()
                 .setUri(uri)
                 .addParameters(parameters)
                 .build();
-        return req;
     }
 
 }

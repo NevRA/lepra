@@ -1,6 +1,5 @@
 package org.koroed.lepra.content.parser;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,11 +8,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.koroed.lepra.content.LepraPost;
+import org.koroed.lepra.loader.LepraNewContentHandler;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Author: Nikita Koroed
@@ -21,38 +18,37 @@ import java.util.List;
  * Date: 26.05.2014
  * Time: 19:30
  */
-public class LepraPostListParser extends LepraContentParser<List<LepraPost>> {
+public class LepraPostListParser extends LepraContentParser<Integer> {
 
-    private static LepraPostListParser instance = new LepraPostListParser();
     private static String POST_SEPARATOR = "\\n\\n\\t\\t\\n\\t\\t\\t\\t";
 
-    public static LepraPostListParser getInstance() {
-        return instance;
-    }
+    private LepraNewContentHandler<LepraPost> handler;
 
-    private LepraPostListParser() {
+    public LepraPostListParser(LepraNewContentHandler<LepraPost> handler) {
+        this.handler = handler;
     }
 
     @Override
-    protected List<LepraPost> parseContent(String content) {
+    protected Integer parseContent(String content) {
 
         if(!content.contains("{")) {
             System.out.println(content);
-            return Collections.emptyList();
+            return null;
         }
 
         content = content.substring(content.indexOf("{"));
 
-
+        Integer newOffset = null;
         String template = null;
         try {
             JSONObject obj = new JSONObject(content);
             template = obj.getString("template");
+            newOffset = obj.getInt("offset");
         } catch (JSONException e) {
             e.printStackTrace();
         }
         if(StringUtils.isBlank(template)) {
-            return Collections.emptyList();
+            return null;
         }
 
 //        if(template.indexOf(POST_SEPARATOR) < 0) {
@@ -60,14 +56,12 @@ public class LepraPostListParser extends LepraContentParser<List<LepraPost>> {
 //        }
         String[] rawPostArray =  template.split(POST_SEPARATOR, -1);
 
-
-        ArrayList<LepraPost> result = new ArrayList<LepraPost>();
         for(String rawPost : rawPostArray) {
             if(StringUtils.isNotBlank(rawPost)){
-                result.add(postParser(rawPost));
+                handler.processContent(postParser(rawPost));
             }
         }
-        return result;
+        return newOffset;
     }
 
     private LepraPost postParser(String rawPost) {
