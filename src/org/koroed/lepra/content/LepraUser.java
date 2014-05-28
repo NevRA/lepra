@@ -17,6 +17,8 @@ public class LepraUser implements Serializable {
     private Date created;// : 1258152775,
     private Integer invitedById;// : 18529,
 
+    public LepraUser() {}
+
     public LepraUser(Integer id, String login, String gender, Integer karma) {
         this.id = id;
         this.login = login;
@@ -37,28 +39,44 @@ public class LepraUser implements Serializable {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getLogin() {
         return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getGender() {
         return gender;
     }
 
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public Integer getKarma() {
         return karma;
+    }
+
+    public void setKarma(Integer karma) {
+        this.karma = karma;
     }
 
     public Date getCreated() {
         return created;
     }
 
-    public Integer getInvitedById() {
-        return invitedById;
-    }
-
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public Integer getInvitedById() {
+        return invitedById;
     }
 
     public void setInvitedById(Integer invitedById) {

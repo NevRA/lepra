@@ -12,8 +12,6 @@ import java.io.Serializable;
  */
 public class LepraContext implements Serializable {
     private LepraUser user;
-    private String cookieSid;
-    private String cookieUid;
     private String csrfToken;
 
     public LepraContext(LepraUser user) {
@@ -36,8 +34,6 @@ public class LepraContext implements Serializable {
     public String toString() {
         return "LepraContext{" +
                 "user=" + user +
-                ", cookieSid='" + cookieSid + '\'' +
-                ", cookieUid='" + cookieUid + '\'' +
                 ", csrfToken='" + csrfToken + '\'' +
                 '}';
     }

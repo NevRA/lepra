@@ -1,6 +1,10 @@
 package org.koroed.lepra;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.koroed.lepra.content.LepraPost;
 import org.koroed.lepra.content.LepraProfile;
 import org.koroed.lepra.content.LepraUser;
@@ -8,8 +12,10 @@ import org.koroed.lepra.content.parser.*;
 import org.koroed.lepra.loader.LepraAsyncContentListLoader;
 import org.koroed.lepra.loader.LepraNewContentHandler;
 
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -56,7 +62,6 @@ public class Lepra {
         ctx = new LepraContext(lepraUser);
 
         httpClient.loadContent(LepraURI.getProfileURI(lepraUser.getLogin()), new CurrentUserInfoParser(ctx));
-        System.out.println(ctx);
         return lepraUser;
     }
 
@@ -93,11 +98,30 @@ public class Lepra {
     public LepraAsyncContentListLoader getInboxListLoader(LepraNewContentHandler<LepraPost> handler) {
         LepraAsyncContentListLoader l = getPostListLoader(LepraURI.INBOX, "1", handler);
         l.setPeriod(30);
+        l.setUnread(1);
         return l;
     }
 
     public LepraAsyncContentListLoader getFavListLoader(String leprosorium, LepraNewContentHandler<LepraPost> handler) {
         return getPostListLoader(LepraURI.FAV, "last_activity", handler);
     }
+
+    public String getContextJson() {
+        return new Gson().toJson(httpClient.cookieStore.getCookies());
+    }
+
+    public void initFromUserContextJson(String json) {
+        Type type = new TypeToken<List<BasicClientCookie>>(){}.getType();
+        List<Cookie> cokies =  new Gson().fromJson(json, type);
+        for(Cookie c : cokies) {
+            httpClient.cookieStore.addCookie(c);
+        }
+        ctx = new LepraContext(new LepraUser());
+        httpClient.loadContent(LepraURI.USERS, new CurrentUserInfoParser(ctx));
+    }
+
+
+
+
 
 }

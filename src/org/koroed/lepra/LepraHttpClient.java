@@ -73,7 +73,7 @@ public class LepraHttpClient {
         return null;
     }
 
-    private static HttpUriRequest createFormRequest(URI uri, Map<String, String> formAttributes) throws URISyntaxException {
+    private HttpUriRequest createFormRequest(URI uri, Map<String, String> formAttributes) throws URISyntaxException {
         NameValuePair[] parameters = new NameValuePair[formAttributes.size()];
         String[] keys = new String[formAttributes.size()];
         formAttributes.keySet().toArray(keys);
@@ -82,10 +82,11 @@ public class LepraHttpClient {
         for (int i = 0; i < formAttributes.size(); i++) {
             parameters[i] = new BasicNameValuePair(keys[i], values[i]);
         }
-        return RequestBuilder.post()
+        HttpUriRequest req = RequestBuilder.post()
                 .setUri(uri)
                 .addParameters(parameters)
                 .build();
+        return req;
     }
 
 }

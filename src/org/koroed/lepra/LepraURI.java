@@ -19,6 +19,7 @@ public class LepraURI {
     public static URI MY_THINGS = newURI(PROTOCOL + LEPRA_HOSTNAME + "/ajax/interest/moar/");
     public static URI INBOX = newURI(PROTOCOL + LEPRA_HOSTNAME + "/ajax/inbox/moar/");
     public static URI FAV = newURI(PROTOCOL + LEPRA_HOSTNAME + "/ajax/favourites/list/");
+    public static URI USERS = newURI(PROTOCOL + LEPRA_HOSTNAME + "/users/");
 
     public static URI getProfileURI(String login) {
         return newURI(PROTOCOL + LEPRA_HOSTNAME + "/users/" + login);

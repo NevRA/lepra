@@ -11,6 +11,7 @@
     <orderEntry type="library" name="commons-lang3-3" level="project" />
     <orderEntry type="library" name="http-client 4.3" level="project" />
     <orderEntry type="library" name="jsoup-1.7.3-javadoc" level="project" />
+    <orderEntry type="library" name="gson-2.2.4-javadoc" level="project" />
   </component>
 </module>
 

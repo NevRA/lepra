@@ -1,10 +1,8 @@
 package org.koroed.lepra.content.parser;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.koroed.lepra.LepraContext;
 import org.koroed.lepra.LepraException;
-import org.koroed.lepra.content.LepraUser;
 
 import java.util.Date;
 
@@ -35,9 +33,10 @@ public class CurrentUserInfoParser extends LepraContentParser<LepraContext> {
 
         JSONObject obj = new JSONObject(content);
 
-        if(!StringUtils.equals(lepraContext.getUser().getLogin(),obj.getString("login"))) {
-            throw new LepraException("Unknown error");
-        }
+        lepraContext.getUser().setLogin(obj.getString("login"));
+        lepraContext.getUser().setId(obj.getInt("id"));
+        lepraContext.getUser().setGender(obj.getString("gender"));
+        lepraContext.getUser().setKarma(obj.getInt("karma"));
 
         lepraContext.setCsrfToken(obj.getString("csrf_token"));
         lepraContext.getUser().setCreated(new Date(obj.getLong("created") * 1000));
