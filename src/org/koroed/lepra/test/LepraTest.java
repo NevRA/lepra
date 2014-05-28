@@ -17,8 +17,14 @@ public class LepraTest {
         //Получаем инстанс
         Lepra l = Lepra.getInstance();
 
+        //Пробуем получить состояние пользователя (null - не авторизован)
+        System.out.println(l.getLepraStatus());
+
         //авторизируемся
         System.out.println(l.login("Hutch", "pass", true));
+
+        //еще раз пробуем
+        System.out.println(l.getLepraStatus());
 
         //Получаем чей-нибудь профаил
         System.out.println(l.loadProfile("Fill"));
@@ -26,7 +32,7 @@ public class LepraTest {
         //Создаем загрузчик для контента
         //если первый параметр null - загружаем главную, иначе - подлепру
         //для обработки каждого нового поста используется хендлер, чтобы не ждать пока все загрузится.
-        LepraAsyncContentListLoader loader = l.getPostListLoader("android", new LepraNewContentHandler<LepraPost>() {
+        LepraAsyncContentListLoader loader = l.getPostListLoader(null, new LepraNewContentHandler<LepraPost>() {
             @Override
             public void processContent(LepraPost content) {
                 System.out.println(content);

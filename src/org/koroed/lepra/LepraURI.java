@@ -15,6 +15,7 @@ public class LepraURI {
     public static URI LEPRA = newURI(PROTOCOL + "leprosorium.ru");
     public static URI LOGIN = newURI(PROTOCOL + LEPRA_HOSTNAME + "/ajax/auth/login/");
     public static URI LOGOUT = newURI(PROTOCOL + LEPRA_HOSTNAME + "/ajax/auth/logout/");
+    public static URI LEPROPANEL = newURI(PROTOCOL + LEPRA_HOSTNAME + "/api/lepropanel");
 
     public static URI getProfileURI(String login) {
         return newURI(PROTOCOL + LEPRA_HOSTNAME + "/users/" + login);

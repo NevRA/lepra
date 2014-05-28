@@ -60,6 +60,10 @@ public class Lepra {
         return lepraUser;
     }
 
+    public LepraStatus getLepraStatus() {
+        return httpClient.loadContent(LepraURI.LEPROPANEL, LepraStatusParser.getInstance());
+    }
+
     public void logout() {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("csrf_token", ctx.getCsrfToken());
