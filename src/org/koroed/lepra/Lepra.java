@@ -110,7 +110,7 @@ public class Lepra {
         return new Gson().toJson(httpClient.cookieStore.getCookies());
     }
 
-    public void initFromUserContextJson(String json) {
+    public void initFromContextJson(String json) {
         Type type = new TypeToken<List<BasicClientCookie>>(){}.getType();
         List<Cookie> cokies =  new Gson().fromJson(json, type);
         for(Cookie c : cokies) {
