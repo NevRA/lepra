@@ -43,7 +43,9 @@ public class LepraPostListParser extends LepraContentParser<Integer> {
         try {
             JSONObject obj = new JSONObject(content);
             template = obj.getString("template");
-            newOffset = obj.getInt("offset");
+            if(!obj.isNull("offset")) {
+                newOffset = obj.getInt("offset");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

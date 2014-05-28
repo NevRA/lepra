@@ -83,4 +83,21 @@ public class Lepra {
         return getPostListLoader(LepraURI.getPostListURI(leprosorium), "last_activity", handler);
     }
 
+    public LepraAsyncContentListLoader getMyThingsListLoader(LepraNewContentHandler<LepraPost> handler) {
+        LepraAsyncContentListLoader l = getPostListLoader(LepraURI.MY_THINGS, "1", handler);
+        l.setPeriod(30);
+        l.setUnread(0);
+        return l;
+    }
+
+    public LepraAsyncContentListLoader getInboxListLoader(LepraNewContentHandler<LepraPost> handler) {
+        LepraAsyncContentListLoader l = getPostListLoader(LepraURI.INBOX, "1", handler);
+        l.setPeriod(30);
+        return l;
+    }
+
+    public LepraAsyncContentListLoader getFavListLoader(String leprosorium, LepraNewContentHandler<LepraPost> handler) {
+        return getPostListLoader(LepraURI.FAV, "last_activity", handler);
+    }
+
 }

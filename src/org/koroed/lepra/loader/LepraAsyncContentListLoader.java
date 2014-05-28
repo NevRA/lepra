@@ -29,6 +29,9 @@ public class LepraAsyncContentListLoader extends LepraContentListLoader {
     }
 
     public void load() {
+        if(!hasNext()) {
+            return;
+        }
         stop();
         executorService = Executors.newSingleThreadExecutor();
         f = executorService.submit(new Runnable() {

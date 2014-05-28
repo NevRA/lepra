@@ -1,6 +1,5 @@
 package org.koroed.lepra.loader;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.koroed.lepra.LepraContext;
 import org.koroed.lepra.LepraHttpClient;
 import org.koroed.lepra.content.parser.LepraContentParser;
@@ -17,8 +16,9 @@ import java.util.Map;
  */
 public class LepraContentListLoader {
     private LepraContentParser<Integer> parser;
-    private int defOffset = 42;
-    private int offset = 0;
+    private Integer offset = 0;
+    private Integer period;
+    private Integer unread;
     private String sorting;
     private URI uri;
     private LepraContext ctx;
@@ -33,20 +33,31 @@ public class LepraContentListLoader {
     }
 
     public void load() {
+        if(!hasNext()) {
+            return;
+        }
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("csrf_token", ctx.getCsrfToken());
         parameters.put("offset", Integer.toString(offset));
         parameters.put("sorting", sorting);
-        setNewOffset(httpClient.loadContent(uri, parameters, parser));
+        if(period != null) {
+            parameters.put("period", period.toString());
+        }
+        if(unread != null) {
+            parameters.put("unread", unread.toString());
+        }
+        offset = httpClient.loadContent(uri, parameters, parser);
     }
 
-    public void setNewOffset(Integer offset) {
-        this.offset = ObjectUtils.defaultIfNull(offset, defOffset);
+    public boolean hasNext() {
+        return offset != null;
     }
 
-    public void setDefOffset(int defOffset) {
-        this.defOffset = defOffset;
+    public void setPeriod(Integer period) {
+        this.period = period;
     }
 
-
+    public void setUnread(Integer unread) {
+        this.unread = unread;
+    }
 }
