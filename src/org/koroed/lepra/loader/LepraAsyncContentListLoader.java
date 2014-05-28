@@ -17,8 +17,8 @@ import java.util.concurrent.Future;
  */
 public class LepraAsyncContentListLoader extends LepraContentListLoader {
 
-    ExecutorService executorService = Executors.newSingleThreadExecutor();
-    Future f = null;
+    private ExecutorService executorService;
+    private Future f;
 
     public LepraAsyncContentListLoader(URI uri, LepraContentParser<Integer> parser, String sorting, LepraContext ctx, LepraHttpClient httpClient) {
         super(uri, parser, sorting, ctx, httpClient);
@@ -30,11 +30,14 @@ public class LepraAsyncContentListLoader extends LepraContentListLoader {
 
     public void load() {
         stop();
+        executorService = Executors.newSingleThreadExecutor();
         f = executorService.submit(new Runnable() {
             public void run() {
                 suncLoad();
+
             }
         });
+        executorService.shutdown();
     }
 
     public boolean isDone() {
@@ -45,8 +48,8 @@ public class LepraAsyncContentListLoader extends LepraContentListLoader {
         if(!isDone()) {
             f.cancel(true);
         }
+        if(executorService != null && !executorService.isShutdown()) {
+            executorService.shutdownNow();
+        }
     }
-
-
-
 }
